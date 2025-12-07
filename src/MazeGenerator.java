@@ -1,15 +1,3 @@
-/*
-Here’s the core idea:
-        1. Start with a grid completely filled with walls.
-        2. Pick a starting cell, mark it as a path, and "visit" it.
-        3. From the current cell, look for unvisited neighboring cells (up, down, left, or right).
-        4. If you find any, choose one randomly, knock down the wall between it and the current cell, and move to it.
-        5. Repeat the process. If you get stuck (no unvisited neighbors), backtrack to the previous cell and try a different direction.
-        6. This continues until all possible cells have been visited, creating a "perfect" maze (one with no loops and a single path between any two points).
-
-        For this to work well, it's best to use a grid with odd dimensions (e.g., 21x21).
-*/
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +23,36 @@ class MazeGenerator {
                 grid[ny][nx] = 0; // Carve path to neighbor
                 grid[cy + dir[1]][cx + dir[0]] = 0; // Carve wall in between
                 carveMaze(grid, nx, ny, rand);
+            }
+        }
+    }
+
+    // 미로의 벽을 무작위로 허물어 루프(순환)를 만드는 메서드
+    public static void addLoops(int[][] grid, int removeCount) {
+        Random rand = new Random();
+        int rows = grid.length;
+        int cols = grid[0].length;
+        int count = 0;
+
+        while (count < removeCount) {
+            // 랜덤한 내부 좌표 선택 (테두리 제외)
+            int r = rand.nextInt(rows - 2) + 1;
+            int c = rand.nextInt(cols - 2) + 1;
+
+            // 해당 좌표가 벽(1)이라면
+            if (grid[r][c] == 1) {
+                // 상하좌우 중 빈 공간(0)이 2개 이상 접해있으면 벽을 뚫어 루프 생성 가능성이 높음
+                int openNeighbors = 0;
+                if (grid[r-1][c] == 0) openNeighbors++;
+                if (grid[r+1][c] == 0) openNeighbors++;
+                if (grid[r][c-1] == 0) openNeighbors++;
+                if (grid[r][c+1] == 0) openNeighbors++;
+
+                // 두 개의 통로를 가로막고 있는 벽이라면 뚫어서 연결
+                if (openNeighbors >= 2) {
+                    grid[r][c] = 0;
+                    count++;
+                }
             }
         }
     }
@@ -68,6 +86,9 @@ class MazeGenerator {
         if (grid[rows - 2][cols - 1] == 1 && grid[rows - 1][cols - 2] == 1) {
             grid[rows - 2][cols - 1] = 0;
         }
+
+        int totalCells = rows * cols;
+        addLoops(grid, totalCells / 60);
 
         return grid;
     }
