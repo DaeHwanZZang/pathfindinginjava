@@ -46,7 +46,7 @@ public class MazePanel extends JPanel {
             playerImg = ImageIO.read(new File("creeper.png"));
             goalImg = ImageIO.read(new File("goal.png"));
             pathImg = ImageIO.read(new File("path.png"));
-            keyImg = ImageIO.read(new File("orikey.png"));
+            keyImg = ImageIO.read(new File("key.png"));
         } catch (IOException e) {
             // 이미지가 없으면 넘어감 (기본 도형 사용)
         }
