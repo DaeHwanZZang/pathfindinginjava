@@ -12,7 +12,6 @@ public class PathfindingApp {
     private static int playerX = 0;
     private static int playerY = 0;
     private static int[][] grid;
-    private static int numberOfSeed = 2; // 시드 개수는 맵 크기에 따라 조절해도 좋지만 일단 고정
     private static Node goal;
     private static MazePanel mazePanel;
     private static Node keyNode;
